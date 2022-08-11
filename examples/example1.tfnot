@@ -1,7 +1,84 @@
-module "template_terraform_module_starter" {
-  source  = "StratusGrid/template-terraform-module-starter/aws"
-  version = "1.0.0"
-  # source   = "github.com/StratusGrid/terraform-aws-template-terraform-module-starter"
-  name       = "${var.name_prefix}-template-terraform-module-starter${local.name_suffix}"
-  input_tags = merge(local.common_tags, {})
+locals {
+  versions = [
+    {
+        version = "0.1.0"
+        protocols = ["4.0", "5.1"]
+        platforms = [
+            {
+                os = "darwin"
+                arch = "amd64"
+            }
+        ]
+    },
+    {
+        version = "0.1.0"
+        protocols = ["4.0", "5.1"]
+        platforms = [
+            {
+                os = "linux"
+                arch = "amd64"
+            }
+        ]
+    }
+  ]
+  packages = [
+    {
+      version = "0.1.0"
+      pkg_info = {
+        protocols = ["4.0", "5.1"]
+        os = "darwin"
+        arch = "arm64"
+        filename = "<provider-filename>.zip"
+        download_url = "https://<provider-artifact>.zip"
+        shasums_url = "https://<provider-artifact>.SHA256SUMS"
+        shasums_signature_url = "https://<provider-artifact>.SHA256SUMS.sig"
+        shasum = "<provider-shasum>"
+        signing_keys = {
+          gpg_public_keys = [{
+              key_id = "<gpg-key-id>"
+              ascii_armor = <<EOT
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+<pgp-public-key>
+-----END PGP PUBLIC KEY BLOCK-----
+EOT
+            }]
+        }
+      }
+    },
+        {
+      version = "0.1.0"
+      pkg_info = {
+        protocols = ["4.0", "5.1"]
+        os = "linux"
+        arch = "amd64"
+        filename = "<provider-filename>.zip"
+        download_url = "https://<provider-artifact>.zip"
+        shasums_url = "https://<provider-artifact>.SHA256SUMS"
+        shasums_signature_url = "https://<provider-artifact>.SHA256SUMS.sig"
+        shasum = "<provider-shasum>"
+        signing_keys = {
+          gpg_public_keys = [{
+              key_id = "<gpg-key-id>"
+              ascii_armor = <<EOT
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+<pgp-public-key>
+-----END PGP PUBLIC KEY BLOCK-----
+EOT
+            }]
+        }
+      }
+    }
+  ]
+}
+
+module "provider" {
+    source = "StratusGrid/private-terraform-registry-s3/aws"
+    # source   = "github.com/StratusGrid/private-terraform-registry-s3"
+    packages = local.packages
+    versions = local.versions
+    namespace = "<provider-namespace>"
+    allowed_ips = ["<allowed-ips>"]
+    type      = "<namespace>"
 }
