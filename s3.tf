@@ -1,20 +1,31 @@
 resource "aws_s3_bucket" "provider_bucket" {
   bucket = var.provider_bucket
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.bucket_key.arn
-        sse_algorithm     = "aws:kms"
-      }
+  tags   = local.tags
+}
+
+resource "aws_s3_bucket_versioning" "provider_bucket_versioning" {
+  bucket = aws_s3_bucket.provider_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "provider_bucket_sse" {
+  bucket = aws_s3_bucket.provider_bucket.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.bucket_key.arn
+      sse_algorithm     = "aws:kms"
     }
   }
-  versioning {
-    enabled = true
-  }
-  logging {
-    target_bucket = aws_s3_bucket.log_bucket.id
-  }
-  tags = local.tags
+}
+
+resource "aws_s3_bucket_logging" "provider_bucket_logging" {
+  bucket = aws_s3_bucket.provider_bucket.id
+
+  target_bucket = aws_s3_bucket.log_bucket.id
+  target_prefix = "log/"
 }
 
 resource "aws_s3_bucket_acl" "provider_bucket_acl" {
@@ -30,23 +41,28 @@ resource "aws_s3_bucket_public_access_block" "provider_bucket_block" {
   restrict_public_buckets = true
 }
 
+#tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "log_bucket" {
   bucket = var.log_bucket
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.bucket_key.arn
-        sse_algorithm     = "aws:kms"
-      }
+  tags   = local.tags
+}
+
+resource "aws_s3_bucket_versioning" "log_bucket_versioning" {
+  bucket = aws_s3_bucket.log_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "log_bucket_sse" {
+  bucket = aws_s3_bucket.log_bucket.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.bucket_key.arn
+      sse_algorithm     = "aws:kms"
     }
   }
-  versioning {
-    enabled = true
-  }
-  logging {
-    target_bucket = aws_s3_bucket.log_bucket.id
-  }
-  tags = local.tags
 }
 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
