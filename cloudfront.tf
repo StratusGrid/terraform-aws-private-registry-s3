@@ -45,7 +45,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = aws_s3_bucket.log_bucket.id
+    bucket          = aws_s3_bucket.log_bucket.bucket_domain_name
     prefix          = "cloudfront"
   }
 
