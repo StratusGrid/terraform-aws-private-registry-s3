@@ -6,7 +6,7 @@ GitHub: [StratusGrid/private-terraform-registry-s3](https://github.com/StratusGr
 This module creates a Terraform Provider Registry in AWS S3 which is accessible from specific IP ranges. For details about Terraform provider registries, please see [Provider Registry Protocol](https://www.terraform.io/internals/provider-registry-protocol).
 An example is also provided below.
 
-## Example
+## Example Usage:
 
 ```hcl
 locals {
@@ -152,5 +152,5 @@ module "provider" {
 
 ---
 
-Note, manual changes to the README will be overwritten when the documentation is updated. To update the documentation, run `terraform-docs -c .config/.terraform-docs.yml`
+<span style="color:red">Note:</span> Manual changes to the README will be overwritten when the documentation is updated. To update the documentation, run `terraform-docs -c .config/.terraform-docs.yml .`
 <!-- END_TF_DOCS -->
