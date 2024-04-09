@@ -1,3 +1,5 @@
+header-from: ./.config/header.md
+
 version: ""
 
 formatter: markdown table
@@ -5,6 +7,8 @@ formatter: markdown table
 name: private-terraform-registry-s3
 
 content: |-
+  {{ .Header }}
+
   # private-terraform-registry-s3
 
   GitHub: [StratusGrid/private-terraform-registry-s3](https://github.com/StratusGrid/private-terraform-registry-s3)
@@ -34,6 +38,7 @@ content: |-
 
 sections:
   show:
+    - header
     - resources
     - inputs
     - outputs
